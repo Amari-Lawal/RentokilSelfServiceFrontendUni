@@ -8,7 +8,7 @@ export default function AuthForms({ setToken, setUser }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  // Test
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
