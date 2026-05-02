@@ -6,9 +6,6 @@ on:
       - main
       - dev
       - test
-    paths:
-      - 'RentokilSelfServiceFrontendUni/**'
-      - '.github/workflows/deploy-frontend.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
