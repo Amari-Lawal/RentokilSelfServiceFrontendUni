@@ -23,7 +23,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+    environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name }}
 
     steps:
       - name: Checkout
@@ -67,4 +67,5 @@ jobs:
         with:
           service: rentokil-frontend-uni-${{ env.ENV_NAME }}
           region: ${{ env.REGION }}
+          flags: '--allow-unauthenticated'
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/rentokil-frontend-uni-${{ env.ENV_NAME }}:${{ github.sha }}
