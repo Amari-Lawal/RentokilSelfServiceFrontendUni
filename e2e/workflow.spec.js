@@ -40,25 +40,37 @@ test.describe('Rentokil Self Service - E2E Workflow', () => {
     await expect(page.getByText(`Welcome, ${uniqueUsername}`)).toBeVisible();
     await expect(page.getByRole('heading', { name: 'My Appointments' })).toBeVisible();
 
-    // 4. Booking Flow
+    // 4. Booking Flow - Test Validation (Past Date)
     await page.getByRole('button', { name: 'Book Exterminator' }).click();
 
-    // Fill booking form
-    await page.getByLabel('Date').fill('2026-10-20');
+    await page.locator('#door_number').fill('10');
+    await page.locator('#road_name').fill('Test Road');
+    await page.locator('#postcode').fill('EN11XW');
+    
+    // Brief wait for background mapping to resolve M1 -> Manchester
+    await page.waitForTimeout(500);
+    
+    await page.getByLabel('Date').fill('2020-01-01');
     await page.getByLabel('Time').fill('14:30');
     await page.getByLabel('Pest Type').selectOption('Ants');
-    await page.getByLabel('Location').fill('123 Test Street, London');
-    await page.getByLabel('Additional Notes').fill('We have a trail of ants in the kitchen.');
+    await page.getByRole('button', { name: 'Confirm Booking' }).click();
     
+    // Verify error message
+    await expect(page.getByText('Error: Appointment date cannot be in the past.')).toBeVisible();
+
+    // 5. Booking Flow - Correct Data
+    await page.getByLabel('Date').fill('2027-10-20');
     await page.getByRole('button', { name: 'Confirm Booking' }).click();
 
-    // Verify booking appears in table
+    // Verify success message then table row
+    await expect(page.getByText('Booking Confirmed!')).toBeVisible();
     const tableRow = page.locator('table tbody tr').first();
-    await expect(tableRow).toBeVisible();
+    await expect(tableRow).toBeVisible({ timeout: 15000 });
     await expect(tableRow).toContainText('Ants');
-    await expect(tableRow).toContainText('123 Test Street, London');
+    await expect(tableRow).toContainText('10 Test Road');
+    await expect(tableRow).toContainText('EN11XW');
 
-    // 5. Cancellation Flow
+    // 6. Cancellation Flow
     page.on('dialog', dialog => dialog.accept());
     await tableRow.getByRole('button', { name: 'Cancel' }).click();
     await expect(page.getByText('No appointments found.')).toBeVisible();
@@ -76,7 +88,7 @@ test.describe('Rentokil Self Service - E2E Workflow', () => {
     // 2. Verify Admin Dashboard
     await expect(page.getByText('All Appointments (Admin)')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Book Exterminator' })).not.toBeVisible();
-    
+
     // 3. Verify Staff Management exists
     await expect(page.getByText('Staff Management')).toBeVisible();
   });

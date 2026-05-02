@@ -171,6 +171,19 @@ body {
 }
 .badge-success { background: #d1fae5; color: #065f46; }
 .badge-warning { background: #fef3c7; color: #92400e; }
+.badge-danger { background: #fee2e2; color: #991b1b; }
+
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+.alert-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
 
 /* Animations */
 @keyframes fadeIn {
