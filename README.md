@@ -1,16 +1,46 @@
-# React + Vite
+# Rentokil Self-Service Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive React application built with Vite and Vanilla CSS for the Rentokil Self-Service portal.
 
-Currently, two official plugins are available:
+## Features
+- **Dynamic Dashboard**: View and manage extermination appointments.
+- **Booking Workflow**: intuitive booking with postcode and date validation.
+- **Admin Portal**: Dedicated view for staff to manage all appointments and create new staff accounts.
+- **Premium UI**: Dark mode with glassmorphism and smooth micro-animations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Getting Started
 
-## React Compiler
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Environment Variables
+Create a `.env` file:
+```env
+VITE_API_URL=http://localhost:8080
+```
 
-## Expanding the ESLint configuration
+### 3. Run Development Server
+```bash
+npm run dev
+```
+The app will be available at [http://localhost:5173](http://localhost:5173).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Testing
+
+### E2E Tests with Playwright
+We use Playwright for end-to-end testing of the full user journey.
+```bash
+# Run tests
+npx playwright test
+
+# View report
+npx playwright show-report
+```
+
+## Build for Production
+```bash
+npm run build
+```
+The production assets will be in the `dist/` directory.
