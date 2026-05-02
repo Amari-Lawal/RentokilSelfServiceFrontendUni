@@ -27,4 +27,5 @@ USER node
 
 # Serve the static files on the port Cloud Run provides
 # -s handles Single Page App routing (prevents 404 on refresh)
-CMD ["sh", "-c", "serve -s dist -l 8080"]
+EXPOSE 8080
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-8080}"]

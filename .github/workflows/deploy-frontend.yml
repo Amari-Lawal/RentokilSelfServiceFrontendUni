@@ -61,4 +61,4 @@ jobs:
           service: rentokil-frontend-uni-${{ env.ENV_NAME }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/rentokil-frontend-uni-${{ env.ENV_NAME }}:${{ github.sha }}
-          flags: '--allow-unauthenticated'
+          flags: '--allow-unauthenticated --port=8080'
