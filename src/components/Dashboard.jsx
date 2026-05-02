@@ -7,6 +7,8 @@ export default function Dashboard({ token, user }) {
   const [showBooking, setShowBooking] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ date: '', time: '', insect_type: '', location: '', notes: '', status: 'Pending' });
+  const [adminFormData, setAdminFormData] = useState({ username: '', password: '' });
+  const [adminMsg, setAdminMsg] = useState('');
 
   useEffect(() => {
     fetchAppointments();
@@ -71,6 +73,26 @@ export default function Dashboard({ token, user }) {
     });
     fetchAppointments();
   };
+  
+  const handleCreateAdmin = async (e) => {
+    e.preventDefault();
+    setAdminMsg('');
+    const res = await fetch(`${API_URL}/auth/create-admin`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(adminFormData)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setAdminMsg('Admin account created successfully!');
+      setAdminFormData({ username: '', password: '' });
+    } else {
+      setAdminMsg(`Error: ${data.detail}`);
+    }
+  };
 
   return (
     <div className="glass-panel" style={{ marginTop: '2rem' }}>
@@ -90,16 +112,16 @@ export default function Dashboard({ token, user }) {
             <div className="flex gap-4">
               <div className="form-group" style={{ flex: 1 }}>
                 <label>Date
-                <input type="date" className="form-control" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} required /></label>
+                <input type="date" className="form-control" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} disabled={user.is_admin} required /></label>
               </div>
               <div className="form-group" style={{ flex: 1 }}>
                 <label>Time
-                <input type="time" className="form-control" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} required /></label>
+                <input type="time" className="form-control" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} disabled={user.is_admin} required /></label>
               </div>
             </div>
             <div className="form-group">
               <label>Pest Type
-              <select className="form-control" value={formData.insect_type} onChange={e => setFormData({...formData, insect_type: e.target.value})} required>
+              <select className="form-control" value={formData.insect_type} onChange={e => setFormData({...formData, insect_type: e.target.value})} disabled={user.is_admin} required>
                 <option value="">Select a pest</option>
                 <option value="Ants">Ants</option>
                 <option value="Bed Bugs">Bed Bugs</option>
@@ -112,11 +134,11 @@ export default function Dashboard({ token, user }) {
             </div>
             <div className="form-group">
               <label>Location
-              <input type="text" className="form-control" placeholder="Enter service address" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} required /></label>
+              <input type="text" className="form-control" placeholder="Enter service address" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} disabled={user.is_admin} required /></label>
             </div>
             <div className="form-group">
               <label>Additional Notes
-              <textarea className="form-control" value={formData.notes || ''} onChange={e => setFormData({...formData, notes: e.target.value})} rows="2"></textarea></label>
+              <textarea className="form-control" value={formData.notes || ''} onChange={e => setFormData({...formData, notes: e.target.value})} rows="2" disabled={user.is_admin}></textarea></label>
             </div>
             {user.is_admin && editingId && (
               <div className="form-group">
@@ -140,7 +162,7 @@ export default function Dashboard({ token, user }) {
         <table className="data-table">
           <thead>
             <tr>
-              {user.is_admin && <th>User ID</th>}
+              {user.is_admin && <th>Customer</th>}
               <th>Date</th>
               <th>Time</th>
               <th>Pest Type</th>
@@ -152,7 +174,7 @@ export default function Dashboard({ token, user }) {
           <tbody>
             {appointments.map(appt => (
               <tr key={appt.id}>
-                {user.is_admin && <td>{appt.user_id}</td>}
+                {user.is_admin && <td style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>{appt.creator_username}</td>}
                 <td>{appt.date}</td>
                 <td>{appt.time}</td>
                 <td>{appt.insect_type}</td>
@@ -174,6 +196,25 @@ export default function Dashboard({ token, user }) {
             ))}
           </tbody>
         </table>
+      )}
+      
+      {user.is_admin && (
+        <div className="glass-panel" style={{ marginTop: '3rem', border: '1px dashed var(--primary-color)' }}>
+          <h3>Staff Management</h3>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', marginBottom: '1rem' }}>Create new administrative accounts for Rentokil staff.</p>
+          {adminMsg && <div style={{ marginBottom: '1rem', color: adminMsg.startsWith('Error') ? 'var(--danger-color)' : 'var(--primary-color)' }}>{adminMsg}</div>}
+          <form onSubmit={handleCreateAdmin} className="flex gap-4 align-end">
+            <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+              <label>Username
+              <input type="text" className="form-control" value={adminFormData.username} onChange={e => setAdminFormData({...adminFormData, username: e.target.value})} required /></label>
+            </div>
+            <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+              <label>Password
+              <input type="password" className="form-control" value={adminFormData.password} onChange={e => setAdminFormData({...adminFormData, password: e.target.value})} required /></label>
+            </div>
+            <button type="submit" className="btn" style={{ height: '42px' }}>Create Admin</button>
+          </form>
+        </div>
       )}
     </div>
   );

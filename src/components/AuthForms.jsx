@@ -4,6 +4,7 @@ const API_URL = 'http://localhost:8080';
 
 export default function AuthForms({ setToken, setUser }) {
   const [isLogin, setIsLogin] = useState(true);
+  const [authMode, setAuthMode] = useState('customer'); // 'customer' or 'admin'
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,7 +18,10 @@ export default function AuthForms({ setToken, setUser }) {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ 
+          username, 
+          password
+        })
       });
       
       const data = await response.json();
@@ -40,8 +44,25 @@ export default function AuthForms({ setToken, setUser }) {
 
   return (
     <div style={{ maxWidth: '400px', margin: '4rem auto' }} className="glass-panel">
+      <div className="flex mb-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
+        <button 
+          className={`flex-1 p-2 ${authMode === 'customer' ? 'active-tab' : ''}`} 
+          style={{ background: 'none', border: 'none', color: authMode === 'customer' ? 'var(--primary-color)' : 'var(--text-light)', cursor: 'pointer', fontWeight: 'bold' }}
+          onClick={() => setAuthMode('customer')}
+        >
+          Customer
+        </button>
+        <button 
+          className={`flex-1 p-2 ${authMode === 'admin' ? 'active-tab' : ''}`} 
+          style={{ background: 'none', border: 'none', color: authMode === 'admin' ? 'var(--primary-color)' : 'var(--text-light)', cursor: 'pointer', fontWeight: 'bold' }}
+          onClick={() => { setAuthMode('admin'); setIsLogin(true); }}
+        >
+          Admin
+        </button>
+      </div>
+
       <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-        {isLogin ? 'Login to Account' : 'Create an Account'}
+        {authMode === 'admin' ? 'Admin ' : ''}{isLogin ? 'Login' : 'Registration'}
       </h2>
       
       {error && <div style={{ color: 'var(--danger-color)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
@@ -67,16 +88,18 @@ export default function AuthForms({ setToken, setUser }) {
             required
           /></label>
         </div>
-        <button type="submit" className="btn" style={{ width: '100%' }}>
+        <button type="submit" className="btn" style={{ width: '100%', marginTop: '1rem' }}>
           {isLogin ? 'Login' : 'Register'}
         </button>
       </form>
       
-      <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-        <span style={{ color: 'var(--text-light)', cursor: 'pointer' }} onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
-        </span>
-      </div>
+      {authMode === 'customer' && (
+        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+          <span style={{ color: 'var(--text-light)', cursor: 'pointer' }} onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
