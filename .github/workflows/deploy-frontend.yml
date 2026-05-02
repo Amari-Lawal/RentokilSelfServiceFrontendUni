@@ -62,7 +62,7 @@ jobs:
             -f Dockerfile.prod .
           docker push "$IMAGE_TAG"
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to Cloud Run # test
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: rentokil-frontend-uni-${{ env.ENV_NAME }}
