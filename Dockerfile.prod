@@ -1,23 +1,30 @@
-# --- Build Stage ---
-FROM node:20-alpine as build-stage
+# --- Stage 1: Build ---
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
+
+# Install dependencies first (better caching)
+COPY package.json package-lock.json* ./
 RUN npm ci
+
+# Copy source and build
 COPY . .
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
-# --- Production Stage ---
-FROM node:20-alpine
+# --- Stage 2: Production ---
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Install the static server globally
+# Install 'serve' - it's much lighter than the Vite dev server
 RUN npm install -g serve
 
-# Copy only the built files from the build stage
-COPY --from=build-stage /app/dist ./dist
+# Copy only the compiled static files from the builder
+COPY --from=builder /app/dist ./dist
 
-# Use the $PORT variable provided by Cloud Run
-# -s flag handles SPA routing (redirects 404s to index.html)
+# Standardize on a non-root user for security
+USER node
+
+# Serve the static files on the port Cloud Run provides
+# -s handles Single Page App routing (prevents 404 on refresh)
 CMD ["sh", "-c", "serve -s dist -l 8080"]
