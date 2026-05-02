@@ -59,7 +59,7 @@ jobs:
           docker build \
             --build-arg VITE_API_URL=${{ env.VITE_API_URL }} \
             -t "$IMAGE_TAG" \
-            -f ./Dockerfile.prod ./RentokilSelfServiceFrontendUni
+            -f Dockerfile.prod .
           docker push "$IMAGE_TAG"
 
       - name: Deploy to Cloud Run
