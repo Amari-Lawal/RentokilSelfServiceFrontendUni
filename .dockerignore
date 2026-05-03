@@ -2,3 +2,9 @@ node_modules
 dist
 .env
 .DS_Store
+
+# Pentest evidence
+Pentest/
+playwright-report/
+test-results/
+*.png
