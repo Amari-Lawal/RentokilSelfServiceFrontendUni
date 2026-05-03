@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function AuthForms({ setToken, setUser }) {
+export default function AuthForms({ setUser }) {
   const [isLogin, setIsLogin] = useState(true);
   const [authMode, setAuthMode] = useState('customer'); // 'customer' or 'admin'
   const [username, setUsername] = useState('');
@@ -18,6 +18,7 @@ export default function AuthForms({ setToken, setUser }) {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ 
           username, 
           password
@@ -31,7 +32,6 @@ export default function AuthForms({ setToken, setUser }) {
       }
 
       if (isLogin) {
-        setToken(data.access_token);
         setUser(data.user);
       } else {
         setIsLogin(true);

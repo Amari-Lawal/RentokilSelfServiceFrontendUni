@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function Dashboard({ token, user }) {
+export default function Dashboard({ user }) {
   const [appointments, setAppointments] = useState([]);
   const [insects, setInsects] = useState([]);
   const [locations, setLocations] = useState([]);
@@ -39,7 +39,7 @@ export default function Dashboard({ token, user }) {
 
   const fetchAppointments = async () => {
     const res = await fetch(`${API_URL}/appointments/`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      credentials: 'include'
     });
     if (res.ok) {
       const data = await res.json();
@@ -82,9 +82,9 @@ export default function Dashboard({ token, user }) {
     const res = await fetch(url, {
       method,
       headers: {
-        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(formData)
     });
     if (res.ok) {
@@ -135,7 +135,7 @@ export default function Dashboard({ token, user }) {
     if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
     await fetch(`${API_URL}/appointments/${id}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      credentials: 'include'
     });
     fetchAppointments();
   };
@@ -146,9 +146,9 @@ export default function Dashboard({ token, user }) {
     const res = await fetch(`${API_URL}/auth/create-admin`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(adminFormData)
     });
     const data = await res.json();
