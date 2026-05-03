@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './index.css';
 import AuthForms from './components/AuthForms';
 import Dashboard from './components/Dashboard';

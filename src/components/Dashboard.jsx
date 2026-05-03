@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Dashboard({ user }) {
   const [appointments, setAppointments] = useState([]);
   const [insects, setInsects] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [showBooking, setShowBooking] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ 
@@ -18,16 +17,9 @@ export default function Dashboard({ user }) {
   const [adminFormData, setAdminFormData] = useState({ username: '', password: '' });
   const [adminMsg, setAdminMsg] = useState('');
 
-  useEffect(() => {
-    fetchAppointments();
-    fetchInsects();
-  }, []);
-
   const handlePostcodeChange = (val) => {
     setFormData(prev => ({ ...prev, postcode: val }));
   };
-
-
 
   const fetchInsects = async () => {
     const res = await fetch(`${API_URL}/insects/`);
@@ -46,6 +38,14 @@ export default function Dashboard({ user }) {
       setAppointments(data);
     }
   };
+
+  useEffect(() => {
+    const init = async () => {
+      await fetchAppointments();
+      await fetchInsects();
+    };
+    init();
+  }, []);
 
   const handleBook = async (e) => {
     e.preventDefault();
