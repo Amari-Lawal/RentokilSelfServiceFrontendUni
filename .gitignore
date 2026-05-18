@@ -33,7 +33,7 @@ playwright-report/
 test-results/
 
 # Pentest evidence
-Pentest/
+#Pentest/
 playwright-report/
 test-results/
 *.png
