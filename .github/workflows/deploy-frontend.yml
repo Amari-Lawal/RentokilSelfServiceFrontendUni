@@ -74,6 +74,7 @@ jobs:
           IMAGE_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${SERVICE_NAME}:${{ github.sha }}"
           docker build \
             --build-arg VITE_API_URL=${{ env.VITE_API_URL }} \
+            --build-arg VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }} \
             -t "$IMAGE_TAG" \
             -f Dockerfile.prod .
           docker push "$IMAGE_TAG"
