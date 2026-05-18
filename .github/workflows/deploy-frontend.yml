@@ -18,10 +18,26 @@ env:
   ENV_NAME: ${{ github.ref_name == 'main' && 'prod' || github.ref_name }}
 
 jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Type Check
+        run: npm run type-check
 
   deploy:
-    #needs: test
+    needs: quality-check
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name }}
 

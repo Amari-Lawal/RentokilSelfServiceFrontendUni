@@ -1,15 +1,20 @@
 import { useState } from 'react';
+import { User } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function AuthForms({ setUser }) {
+interface AuthFormsProps {
+  setUser: (user: User | null) => void;
+}
+
+export default function AuthForms({ setUser }: AuthFormsProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [authMode, setAuthMode] = useState('customer'); // 'customer' or 'admin'
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   // Test
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     const endpoint = isLogin ? '/auth/login' : '/auth/register';
@@ -38,7 +43,7 @@ export default function AuthForms({ setUser }) {
         setError('Registration successful! Please login.');
       }
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'An error occurred');
     }
   };
 

@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import './index.css';
 import AuthForms from './components/AuthForms';
 import Dashboard from './components/Dashboard';
+import { User } from './types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('user');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   useEffect(() => {
     if (user) {

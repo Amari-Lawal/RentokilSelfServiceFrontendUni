@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
+import { User, Appointment, Insect } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function Dashboard({ user }) {
-  const [appointments, setAppointments] = useState([]);
-  const [insects, setInsects] = useState([]);
+interface DashboardProps {
+  user: User;
+}
+
+export default function Dashboard({ user }: DashboardProps) {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [insects, setInsects] = useState<Insect[]>([]);
   const [showBooking, setShowBooking] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({ 
-    date: '', time: '', insect_id: '', 
+    date: '', time: '', insect_id: 0, 
     door_number: '', road_name: '', postcode: '',
     notes: '', status: 'Pending' 
   });
@@ -17,7 +22,7 @@ export default function Dashboard({ user }) {
   const [adminFormData, setAdminFormData] = useState({ username: '', password: '' });
   const [adminMsg, setAdminMsg] = useState('');
 
-  const handlePostcodeChange = (val) => {
+  const handlePostcodeChange = (val: string) => {
     setFormData(prev => ({ ...prev, postcode: val }));
   };
 
@@ -47,7 +52,7 @@ export default function Dashboard({ user }) {
     init();
   }, []);
 
-  const handleBook = async (e) => {
+  const handleBook = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -94,7 +99,7 @@ export default function Dashboard({ user }) {
         setEditingId(null);
         setSuccessMsg('');
         setFormData({ 
-          date: '', time: '', insect_id: '', 
+          date: '', time: '', insect_id: 0, 
           door_number: '', road_name: '', postcode: '',
           notes: '', status: 'Pending' 
         });
@@ -106,7 +111,7 @@ export default function Dashboard({ user }) {
     }
   };
 
-  const handleEdit = (appt) => {
+  const handleEdit = (appt: Appointment) => {
     setFormData({
       date: appt.date,
       time: appt.time,
@@ -114,7 +119,7 @@ export default function Dashboard({ user }) {
       door_number: appt.door_number,
       road_name: appt.road_name,
       postcode: appt.postcode,
-      notes: appt.notes,
+      notes: appt.notes || '',
       status: appt.status
     });
     setEditingId(appt.id);
@@ -125,13 +130,13 @@ export default function Dashboard({ user }) {
     setShowBooking(false);
     setEditingId(null);
     setFormData({ 
-      date: '', time: '', insect_id: '', 
+      date: '', time: '', insect_id: 0, 
       door_number: '', road_name: '', postcode: '',
       notes: '', status: 'Pending' 
     });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
     await fetch(`${API_URL}/appointments/${id}`, {
       method: 'DELETE',
@@ -140,7 +145,7 @@ export default function Dashboard({ user }) {
     fetchAppointments();
   };
 
-  const handleCreateAdmin = async (e) => {
+  const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAdminMsg('');
     const res = await fetch(`${API_URL}/auth/create-admin`, {
@@ -213,7 +218,7 @@ export default function Dashboard({ user }) {
             </div>
             <div className="form-group">
               <label>Additional Notes
-                <textarea className="form-control" value={formData.notes || ''} onChange={e => setFormData({ ...formData, notes: e.target.value })} rows="2" disabled={user.is_admin}></textarea></label>
+                <textarea className="form-control" value={formData.notes || ''} onChange={e => setFormData({ ...formData, notes: e.target.value })} rows={2} disabled={user.is_admin}></textarea></label>
             </div>
             {user.is_admin && editingId && (
               <div className="form-group">
