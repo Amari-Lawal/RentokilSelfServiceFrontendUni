@@ -74,9 +74,10 @@ export default function Dashboard({ user }: DashboardProps) {
       return;
     }
     // Structural "Shape" Validation (Official UK Format - No Spaces)
+    const cleanedPostcode = formData.postcode.replace(/\s+/g, '').toUpperCase();
     const ukPostcodeRegex = /^(([A-Z]{1,2}[0-9][A-Z0-9]?)([0-9][A-Z]{2}))|(GIR0AA)$/i;
-    if (!ukPostcodeRegex.test(formData.postcode)) {
-      setErrorMsg("Error: Invalid UK Postcode structure. Please use the no-space format (e.g. SW1A1AA).");
+    if (!ukPostcodeRegex.test(cleanedPostcode)) {
+      setErrorMsg("Error: Invalid UK Postcode structure. Please use a valid UK postcode (e.g. SW1A1AA).");
       return;
     }
 
@@ -90,7 +91,7 @@ export default function Dashboard({ user }: DashboardProps) {
         'Content-Type': 'application/json'
       },
       credentials: 'include',
-      body: JSON.stringify(formData)
+      body: JSON.stringify({ ...formData, postcode: cleanedPostcode })
     });
     if (res.ok) {
       setSuccessMsg('Booking Confirmed!');
