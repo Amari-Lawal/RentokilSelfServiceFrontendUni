@@ -86,6 +86,8 @@ jobs:
           region: ${{ env.REGION }}
           flags: '--allow-unauthenticated'
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/rentokil-frontend-uni-${{ env.ENV_NAME }}:${{ github.sha }}
+          env_vars: |
+            VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
 
   test:
     runs-on: ubuntu-latest

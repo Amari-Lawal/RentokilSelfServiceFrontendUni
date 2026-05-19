@@ -32,10 +32,15 @@ function App() {
     setUser(null);
   };
 
+  const triggerSentryError = () => {
+    alert("Sentry debug error triggered!");
+    throw new SyntaxError("Frontend insect containment breach: UI layer compromised! V4");
+  };
+
   return (
     <>
       <header className="app-header">
-        <div className="app-title">Rentokil Self Service</div>
+        <div className="app-title" onDoubleClick={triggerSentryError} style={{ cursor: 'pointer' }}>Rentokil Self Service</div>
         {user && (
           <div className="flex align-center gap-4">
             <span>Welcome, <strong>{user?.username}</strong> {user?.is_admin ? '(Admin)' : ''}</span>
