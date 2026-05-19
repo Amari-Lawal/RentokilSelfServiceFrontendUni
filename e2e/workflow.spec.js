@@ -45,7 +45,7 @@ test.describe('Rentokil Self Service - E2E Workflow', () => {
 
     await page.locator('#door_number').fill('10');
     await page.locator('#road_name').fill('Test Road');
-    await page.locator('#postcode').fill('EN11XW');
+    await page.locator('#postcode').fill('SW1A1AA');
     
     // Brief wait for background mapping to resolve M1 -> Manchester
     await page.waitForTimeout(500);
@@ -68,7 +68,7 @@ test.describe('Rentokil Self Service - E2E Workflow', () => {
     await expect(tableRow).toBeVisible({ timeout: 15000 });
     await expect(tableRow).toContainText('Ants');
     await expect(tableRow).toContainText('10 Test Road');
-    await expect(tableRow).toContainText('EN11XW');
+    await expect(tableRow).toContainText('SW1A1AA');
 
     // 6. Cancellation Flow
     page.on('dialog', dialog => dialog.accept());
