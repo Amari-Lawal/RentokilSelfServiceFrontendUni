@@ -12,10 +12,10 @@ export default function Dashboard({ user }: DashboardProps) {
   const [insects, setInsects] = useState<Insect[]>([]);
   const [showBooking, setShowBooking] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [formData, setFormData] = useState({ 
-    date: '', time: '', insect_id: 0, 
+  const [formData, setFormData] = useState({
+    date: '', time: '', insect_id: 0,
     door_number: '', road_name: '', postcode: '',
-    notes: '', status: 'Pending' 
+    notes: '', status: 'Pending'
   });
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -99,10 +99,10 @@ export default function Dashboard({ user }: DashboardProps) {
         setShowBooking(false);
         setEditingId(null);
         setSuccessMsg('');
-        setFormData({ 
-          date: '', time: '', insect_id: 0, 
+        setFormData({
+          date: '', time: '', insect_id: 0,
           door_number: '', road_name: '', postcode: '',
-          notes: '', status: 'Pending' 
+          notes: '', status: 'Pending'
         });
         fetchAppointments();
       }, 1500);
@@ -130,10 +130,10 @@ export default function Dashboard({ user }: DashboardProps) {
   const handleCancelBookingForm = () => {
     setShowBooking(false);
     setEditingId(null);
-    setFormData({ 
-      date: '', time: '', insect_id: 0, 
+    setFormData({
+      date: '', time: '', insect_id: 0,
       door_number: '', road_name: '', postcode: '',
-      notes: '', status: 'Pending' 
+      notes: '', status: 'Pending'
     });
   };
 
