@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import { config } from 'dotenv';
+
+// Load .env so process.env.VITE_API_URL is available to test files
+config();
 
 export default defineConfig({
   testDir: './e2e',

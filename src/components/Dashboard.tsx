@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, Appointment, Insect } from '../types';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.DEV ? '/api' : import.meta.env.VITE_API_URL;
 
 interface DashboardProps {
   user: User;
