@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - test
+      - staging
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -60,6 +61,8 @@ jobs:
         run: |
           if [ "${{ env.ENV_NAME }}" == "prod" ]; then
             echo "VITE_API_URL=${{ secrets.PROD_BACKEND_URL }}" >> $GITHUB_ENV
+          elif [ "${{ env.ENV_NAME }}" == "staging" ]; then
+            echo "VITE_API_URL=${{ secrets.STAGING_BACKEND_URL }}" >> $GITHUB_ENV
           elif [ "${{ env.ENV_NAME }}" == "dev" ]; then
             echo "VITE_API_URL=${{ secrets.DEV_BACKEND_URL }}" >> $GITHUB_ENV
           elif [ "${{ env.ENV_NAME }}" == "test" ]; then
@@ -114,6 +117,8 @@ jobs:
           REF_NAME="${{ github.ref_name }}"
           if [ "$REF_NAME" == "main" ]; then
             echo "VITE_API_URL=${{ secrets.PROD_BACKEND_URL }}" >> $GITHUB_ENV
+          elif [ "$REF_NAME" == "staging" ]; then
+            echo "VITE_API_URL=${{ secrets.STAGING_BACKEND_URL }}" >> $GITHUB_ENV
           elif [ "$REF_NAME" == "dev" ]; then
             echo "VITE_API_URL=${{ secrets.DEV_BACKEND_URL }}" >> $GITHUB_ENV
           elif [ "$REF_NAME" == "test" ]; then
