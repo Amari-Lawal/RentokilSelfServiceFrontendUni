@@ -151,7 +151,7 @@ jobs:
           echo "Testing live frontend at: $FRONTEND_URL"
           STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$FRONTEND_URL")
           if [ "$STATUS_CODE" -ne 200 ]; then
-            echo "❌ Live Frontend returned status code $STATUS_CODE"
+            echo "ERROR: Live Frontend returned status code $STATUS_CODE"
             exit 1
           fi
-          echo "✅ Live Frontend is online!"
+          echo "SUCCESS: Live Frontend is online!"
